@@ -1,4 +1,5 @@
 import express, { Application } from 'express';
+import mongoose from 'mongoose';
 
 class App {
   private readonly port: number;
@@ -9,7 +10,19 @@ class App {
     this.application = express();
   }
 
-  start(): void {
+  public async load(): Promise<void> {
+    await this.connectDatabase();
+  }
+
+  public async connectDatabase(): Promise<void> {
+    await mongoose.connect(process.env.DB_PATH!, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      useCreateIndex: true,
+    });
+  }
+
+  public start(): void {
     this.application.listen(this.port, () =>
       console.log(`Server started in port ${this.port}`)
     );
