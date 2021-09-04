@@ -14,6 +14,6 @@
     "incremental": true,
     "resolveJsonModule": true
   },
-  "include": ["src/**/*.ts", "../wad-iz-type/**/*.ts", "src/data/*.json"],
+  "include": ["src/**/*.ts"],
   "exclude": ["node_modules"]
 }

@@ -1,2 +1,3 @@
 cam-pd-server/node_modules
+cam-pd-server/dist
 cam-pd-server/.env
