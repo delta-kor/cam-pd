@@ -15,11 +15,7 @@ class App {
   }
 
   public async connectDatabase(): Promise<void> {
-    await mongoose.connect(process.env.DB_PATH!, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      useCreateIndex: true,
-    });
+    await mongoose.connect(process.env.DB_PATH!);
   }
 
   public start(): void {
