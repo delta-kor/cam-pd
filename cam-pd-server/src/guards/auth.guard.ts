@@ -6,7 +6,7 @@ async function AuthGuard(req: TypedRequest, res: TypedResponse, next: NextFuncti
   if (!req.jwt) return next(new UnauthorizedException());
 
   const user = await UserService.get(req.jwt.uuid);
-  if (!user) throw new UnauthorizedException();
+  if (!user) return next(new UnauthorizedException());
 
   req.user = user;
 

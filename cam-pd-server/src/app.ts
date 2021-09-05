@@ -1,3 +1,4 @@
+import cors from 'cors';
 import express, { Application, json, NextFunction } from 'express';
 import mongoose from 'mongoose';
 import HttpException from './exceptions/http.exception';
@@ -28,6 +29,7 @@ class App {
 
   public mountPipes(): void {
     this.application.use(json());
+    this.application.use(cors());
     IpPipe.use(this.application);
     JwtPipe.use(this.application);
   }
