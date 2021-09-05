@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import HttpException from './exceptions/http.exception';
 import NotfoundException from './exceptions/notfound.exception';
 import IpPipe from './pipes/ip.pipe';
+import JwtPipe from './pipes/jwt.pipe';
 import UserRouter from './routes/user.route';
 
 class App {
@@ -28,6 +29,7 @@ class App {
   public mountPipes(): void {
     this.application.use(json());
     IpPipe.use(this.application);
+    JwtPipe.use(this.application);
   }
 
   public mountRouters(): void {
@@ -40,12 +42,7 @@ class App {
     });
 
     this.application.use(
-      (
-        err: Error,
-        req: TypedRequest,
-        res: TypedResponse<ExceptionResponse>,
-        next: NextFunction
-      ) => {
+      (err: Error, req: TypedRequest, res: TypedResponse<ExceptionResponse>, _: NextFunction) => {
         if (err instanceof HttpException) {
           res.status(err.status);
           res.json({ ok: false, message: err.message });

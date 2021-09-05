@@ -7,6 +7,11 @@ class UserServiceClass {
     return !!user;
   }
 
+  public async get(uuid: string): Promise<User | null> {
+    const user = await UserModel.findOne({ uuid });
+    return user || null;
+  }
+
   public async create(nickname: string, ip: string): Promise<User> {
     const nicknameExists = await this.hasNickname(nickname);
     if (nicknameExists) throw new UnprocessableEntityException('이미 사용중인 닉네임입니다');

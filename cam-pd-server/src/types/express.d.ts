@@ -1,6 +1,7 @@
 declare namespace Express {
   interface Request {
     jwt: JwtPayload | null;
+    user?: import('../models/user.model').User;
     clientIp: string;
   }
 }
