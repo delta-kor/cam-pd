@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { ChangeEvent, Component } from 'react';
+import { ChangeEvent, Component, KeyboardEvent } from 'react';
 import styled from 'styled-components';
 import Config from '../../config';
 import Talker from '../../services/talker';
@@ -79,14 +79,25 @@ class RegisterScene extends Component<any, State> {
     return (
       <Layout>
         <Title>닉네임을 입력해주세요</Title>
-        <Input placeholder={'한글, 영어, 숫자 최대 12자'} maxLength={12} onChange={this.onChange} />
+        <Input
+          placeholder={'한글, 영어, 숫자 최대 12자'}
+          maxLength={12}
+          onChange={this.onChange}
+          onKeyDown={this.onKeyDown}
+        />
         {this.state.errorMessage && <ErrorMessage>{this.state.errorMessage}</ErrorMessage>}
-        <Submit whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={this.onSubmit}>
+        <Submit whileHover={{ scale: 1.05 }} onClick={this.onSubmit}>
           확인
         </Submit>
       </Layout>
     );
   }
+
+  private onKeyDown = (e: KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      this.onSubmit();
+    }
+  };
 
   private onChange = (e: ChangeEvent<HTMLInputElement>) => {
     this.setState({ nickname: e.target.value });

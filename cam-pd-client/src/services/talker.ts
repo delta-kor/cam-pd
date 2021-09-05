@@ -45,7 +45,7 @@ class TalkerClass {
       responseData = await response.json();
     } catch (e: any) {
       if (!e.json) {
-        return { ok: false, message: '오류가 발생했어요.\n나중에 다시 시도해주세요.' } as T;
+        return { ok: false, message: '네트워크 연결이 원할하지 않습니다' } as T;
       }
       responseData = await e.json();
     }
