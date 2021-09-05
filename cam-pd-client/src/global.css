@@ -1,31 +1,31 @@
 @font-face {
     font-family: Product Sans;
     font-weight: 400;
-    src: url(http://lt2.kr/assets/font/product_sans_regular.woff2) format("woff2"),url(http://lt2.kr/assets/font/product_sans_regular.woff) format("woff");
+    src: url("http://lt2.kr/assets/font/product_sans_regular.woff2") format("woff2"),url("http://lt2.kr/assets/font/product_sans_regular.woff") format("woff");
 }
 
 @font-face {
     font-family: Product Sans;
     font-weight: 700;
-    src: url(http://lt2.kr/assets/font/product_sans_bold.woff2) format("woff2"),url(http://lt2.kr/assets/font/product_sans_bold.woff) format("woff");
+    src: url("http://lt2.kr/assets/font/product_sans_bold.woff2") format("woff2"),url("http://lt2.kr/assets/font/product_sans_bold.woff") format("woff");
 }
 
 @font-face {
     font-family: Noto Sans KR;
     font-weight: 400;
-    src: url(http://lt2.kr/assets/font/noto_regular.woff2) format("woff2"),url(http://lt2.kr/assets/font/noto_regular.woff) format("woff");
+    src: url("http://lt2.kr/assets/font/noto_regular.woff2") format("woff2"),url("http://lt2.kr/assets/font/noto_regular.woff") format("woff");
 }
 
 @font-face {
     font-family: Noto Sans KR;
     font-weight: 500;
-    src: url(http://lt2.kr/assets/font/noto_medium.woff2) format("woff2"),url(http://lt2.kr/assets/font/noto_medium.woff) format("woff");
+    src: url("http://lt2.kr/assets/font/noto_medium.woff2") format("woff2"),url("http://lt2.kr/assets/font/noto_medium.woff") format("woff");
 }
 
 @font-face {
     font-family: Noto Sans KR;
     font-weight: 700;
-    src: url(http://lt2.kr/assets/font/noto_bold.woff2) format("woff2"),url(http://lt2.kr/assets/font/noto_bold.woff) format("woff");
+    src: url("http://lt2.kr/assets/font/noto_bold.woff2") format("woff2"),url("http://lt2.kr/assets/font/noto_bold.woff") format("woff");
 }
 
 * {
@@ -34,10 +34,14 @@
     outline: none;
     box-sizing: border-box;
     -webkit-tap-highlight-color: transparent;
-    font-family: Product Sans, Noto Sans KR, sans-serif;
+    font-family: "Product Sans", "Noto Sans KR", sans-serif;
 }
 
 body {
     background: black;
     color: white;
+}
+
+img {
+    user-select: none;
 }

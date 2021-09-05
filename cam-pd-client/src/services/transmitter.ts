@@ -1,8 +1,10 @@
 import EventEmitter from 'events';
 
-interface TransmitterEvents {}
+interface TransmitterEvents {
+  registercomplete: () => void;
+}
 
-declare interface Transmitter {
+declare interface TransmitterClass {
   on<U extends keyof TransmitterEvents>(event: U, listener: TransmitterEvents[U]): this;
   emit<U extends keyof TransmitterEvents>(
     event: U,
@@ -10,6 +12,8 @@ declare interface Transmitter {
   ): boolean;
 }
 
-class Transmitter extends EventEmitter {}
+class TransmitterClass extends EventEmitter {}
+
+const Transmitter = new TransmitterClass();
 
 export default Transmitter;
