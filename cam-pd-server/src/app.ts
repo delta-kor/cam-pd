@@ -1,7 +1,8 @@
-import express, { Application, NextFunction } from 'express';
+import express, { Application, json, NextFunction } from 'express';
 import mongoose from 'mongoose';
 import HttpException from './exceptions/http.exception';
 import NotfoundException from './exceptions/notfound.exception';
+import IpPipe from './pipes/ip.pipe';
 import UserRouter from './routes/user.route';
 
 class App {
@@ -15,12 +16,18 @@ class App {
 
   public async load(): Promise<void> {
     await this.connectDatabase();
+    this.mountPipes();
     this.mountRouters();
     this.mountExceptions();
   }
 
   public async connectDatabase(): Promise<void> {
     await mongoose.connect(process.env.DB_PATH!);
+  }
+
+  public mountPipes(): void {
+    this.application.use(json());
+    IpPipe.use(this.application);
   }
 
   public mountRouters(): void {
@@ -56,9 +63,7 @@ class App {
   }
 
   public start(): void {
-    this.application.listen(this.port, () =>
-      console.log(`Server started in port ${this.port}`)
-    );
+    this.application.listen(this.port, () => console.log(`Server started in port ${this.port}`));
   }
 }
 
