@@ -20,7 +20,7 @@ class UserControllerClass {
     req: TypedRequest<CreateUserDto>,
     res: TypedResponse<UserResponse.Create>
   ): Promise<void> {
-    const nickname = req.body.nickname;
+    const nickname = req.body.nickname.trim();
 
     const user = await this.userService.create(nickname, req.clientIp);
     const token = await user.generateToken();
