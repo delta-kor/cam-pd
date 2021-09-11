@@ -10,6 +10,11 @@ async function AuthGuard(req: TypedRequest, res: TypedResponse, next: NextFuncti
 
   req.user = user;
 
+  if (!req.user.ip.includes(req.clientIp)) {
+    req.user.ip.push(req.clientIp);
+    await req.user.save();
+  }
+
   next();
 }
 
