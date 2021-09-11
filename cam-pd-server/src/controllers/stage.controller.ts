@@ -5,7 +5,6 @@ interface StageItem {
   uuid: string;
   title: string;
   concert: string;
-  video_id: string;
 }
 
 namespace StageResponse {
@@ -13,7 +12,9 @@ namespace StageResponse {
     stages: StageItem[];
   }
 
-  export interface Create extends StageItem, ApiResponse {}
+  export interface Create extends StageItem, ApiResponse {
+    video_id: string;
+  }
 }
 
 class StageControllerClass {
@@ -25,7 +26,6 @@ class StageControllerClass {
       uuid: stage.uuid,
       title: stage.title,
       concert: stage.concert,
-      video_id: stage.videoId,
     }));
     res.json({ ok: true, stages: result });
   }
