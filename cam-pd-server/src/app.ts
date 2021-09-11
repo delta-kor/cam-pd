@@ -5,7 +5,7 @@ import HttpException from './exceptions/http.exception';
 import NotfoundException from './exceptions/notfound.exception';
 import IpPipe from './pipes/ip.pipe';
 import JwtPipe from './pipes/jwt.pipe';
-import UserRouter from './routes/user.route';
+import { StageRouter, UserRouter } from './routes/route';
 
 class App {
   private readonly port: number;
@@ -36,6 +36,7 @@ class App {
 
   public mountRouters(): void {
     this.application.use('/user', UserRouter);
+    this.application.use('/stage', StageRouter);
   }
 
   public mountExceptions(): void {
