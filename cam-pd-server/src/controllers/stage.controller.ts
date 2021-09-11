@@ -1,17 +1,34 @@
 import CreateStageDto from '../dtos/create-stage.dto';
 import StageService from '../services/stage.service';
 
+interface StageItem {
+  uuid: string;
+  title: string;
+  concert: string;
+  video_id: string;
+}
+
 namespace StageResponse {
-  export interface Create extends ApiResponse {
-    uuid: string;
-    title: string;
-    concert: string;
-    video_id: string;
+  export interface Get extends ApiResponse {
+    stages: StageItem[];
   }
+
+  export interface Create extends StageItem, ApiResponse {}
 }
 
 class StageControllerClass {
   private readonly stageService = StageService;
+
+  public async getStages(req: TypedRequest, res: TypedResponse<StageResponse.Get>): Promise<void> {
+    const stages = await this.stageService.get();
+    const result = stages.map<StageItem>(stage => ({
+      uuid: stage.uuid,
+      title: stage.title,
+      concert: stage.concert,
+      video_id: stage.videoId,
+    }));
+    res.json({ ok: true, stages: result });
+  }
 
   public async createStage(
     req: TypedRequest<CreateStageDto>,

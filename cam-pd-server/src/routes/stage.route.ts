@@ -6,6 +6,7 @@ import AsyncUtil from '../utils/async.util';
 
 const StageRouter = Router();
 
+StageRouter.get('/', AsyncUtil(StageController.getStages.bind(StageController)));
 StageRouter.post(
   '/',
   ValidateGuard(CreateStageDto),
