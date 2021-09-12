@@ -1,10 +1,10 @@
-import { motion } from 'framer-motion';
 import { ChangeEvent, Component, KeyboardEvent } from 'react';
 import styled from 'styled-components';
 import Config from '../../config';
 import Talker from '../../services/talker';
 import Transmitter from '../../services/transmitter';
 import { Colors } from '../../styles';
+import PrimaryButton from '../actions/PrimaryButton';
 
 const Layout = styled.div`
   display: flex;
@@ -48,17 +48,6 @@ const Input = styled.input`
   }
 `;
 
-const Submit = styled(motion.div)`
-  padding: 8px 36px;
-  background: ${Colors.BLUE};
-  border-radius: 8px;
-  font-weight: bold;
-  font-size: 14px;
-  color: ${Colors.WHITE};
-  cursor: pointer;
-  user-select: none;
-`;
-
 const ErrorMessage = styled.div`
   align-self: stretch;
   font-weight: bold;
@@ -86,9 +75,7 @@ class RegisterScene extends Component<any, State> {
           onKeyDown={this.onKeyDown}
         />
         {this.state.errorMessage && <ErrorMessage>{this.state.errorMessage}</ErrorMessage>}
-        <Submit whileHover={{ scale: 1.05 }} onClick={this.onSubmit}>
-          확인
-        </Submit>
+        <PrimaryButton content={'확인'} onClick={this.onSubmit} />
       </Layout>
     );
   }
