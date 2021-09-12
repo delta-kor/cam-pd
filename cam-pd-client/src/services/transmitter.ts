@@ -1,7 +1,7 @@
 import EventEmitter from 'events';
 
 interface TransmitterEvents {
-  registercomplete: () => void;
+  registercomplete(): void;
 }
 
 declare interface TransmitterClass {

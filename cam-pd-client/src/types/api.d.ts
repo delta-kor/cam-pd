@@ -5,3 +5,9 @@ interface ApiResponse {
   token?: string;
   message?: string;
 }
+
+interface Stage {
+  uuid: string;
+  title: string;
+  concert: string;
+}

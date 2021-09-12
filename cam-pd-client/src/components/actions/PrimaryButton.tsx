@@ -16,7 +16,7 @@ const Layout = styled(motion.div)`
 
 interface Props {
   content: string;
-  onClick: () => void;
+  onClick(): void;
 }
 
 class PrimaryButton extends Component<Props, any> {
