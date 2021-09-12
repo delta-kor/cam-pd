@@ -54,12 +54,12 @@ class TalkerClass {
     return responseData;
   }
 
-  public get<T extends ApiResponse>(path: string): Promise<T> {
-    return this.request<T>('GET', path);
+  public get<T>(path: string): Promise<T & ApiResponse> {
+    return this.request<T & ApiResponse>('GET', path);
   }
 
-  public post<T extends ApiResponse>(path: string, data: any): Promise<T> {
-    return this.request<T>('POST', path, data);
+  public post<T>(path: string, data: any): Promise<T & ApiResponse> {
+    return this.request<T & ApiResponse>('POST', path, data);
   }
 }
 

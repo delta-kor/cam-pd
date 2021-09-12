@@ -1,5 +1,7 @@
 import { Component } from 'react';
 import styled from 'styled-components';
+import Config from '../../config';
+import Talker from '../../services/talker';
 import { Colors } from '../../styles';
 import StageSelector from '../actions/StageSelector';
 
@@ -20,22 +22,34 @@ const StageSelectorTitle = styled.div`
   color: ${Colors.WHITE};
 `;
 
-class SelectorScene extends Component<any, any> {
+interface State {
+  stages: Stage[];
+}
+
+class SelectorScene extends Component<any, State> {
+  public state = { stages: [] };
+
+  public componentDidMount = () => {
+    this.loadStages();
+  };
+
   public render() {
     return (
       <Layout>
         <StageSelectorWrapper>
           <StageSelectorTitle>곡 선택</StageSelectorTitle>
-          <StageSelector
-            stages={[
-              { title: 'test1', concert: 'test1', uuid: 'test1' },
-              { title: 'test2', concert: 'test2', uuid: 'test2' },
-            ]}
-          />
+          <StageSelector stages={this.state.stages} />
         </StageSelectorWrapper>
       </Layout>
     );
   }
+
+  private loadStages = async () => {
+    const response = await Talker.get<ApiResponse.Stage.Get>('/stage');
+    if (!response.ok) return alert(response.message || Config.default_error_message);
+
+    this.setState({ stages: response.stages });
+  };
 }
 
 export default SelectorScene;

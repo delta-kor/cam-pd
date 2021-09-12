@@ -28,6 +28,7 @@ class StageSelector extends Component<Props, State> {
       <Layout>
         {this.props.stages.map((stage, index) => (
           <StageSelectorItem
+            key={stage.uuid}
             title={stage.title}
             concert={stage.concert}
             active={this.state.selected === index}
@@ -46,7 +47,7 @@ const ItemLayout = styled.div<{ active: boolean }>`
   padding: 10px;
   border-radius: 8px;
   background: ${({ active }) => (active ? Colors.LIGHT_GRAY : Colors.GRAY)};
-  cursor: pointer;
+  cursor: ${({ active }) => (active ? 'default' : 'pointer')};
   user-select: none;
   transition: 0.2s background;
 `;

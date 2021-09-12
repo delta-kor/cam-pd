@@ -51,7 +51,7 @@ class App extends Component<any, State> {
     Talker.setTicket(ticket);
     Talker.setToken(token);
 
-    const userResponse = await Talker.get('/user');
+    const userResponse = await Talker.get<ApiResponse.User.Get>('/user');
 
     if (!userResponse.ok) {
       this.setState({ scene: Scene.REGISTER });

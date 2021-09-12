@@ -91,11 +91,13 @@ class RegisterScene extends Component<any, State> {
   };
 
   private onSubmit = async () => {
-    const data = await Talker.post('/user', { nickname: this.state.nickname });
+    const data = await Talker.post<ApiResponse.User.Create>('/user', {
+      nickname: this.state.nickname,
+    });
 
     if (!data.ok) {
       this.setState({
-        errorMessage: data.message || '오류가 발생했습니다\n나중에 다시 시도해주세요',
+        errorMessage: data.message || Config.default_error_message,
       });
       return false;
     }
