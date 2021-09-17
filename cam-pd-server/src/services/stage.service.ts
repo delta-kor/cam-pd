@@ -1,3 +1,4 @@
+import NotfoundException from '../exceptions/notfound.exception';
 import StageModel, { Stage } from '../models/stage.model';
 
 class StageServiceClass {
@@ -10,6 +11,12 @@ class StageServiceClass {
     await stage.save();
 
     return stage;
+  }
+
+  public async getVideo(uuid: string): Promise<string> {
+    const videoId = await StageModel.findOne({ uuid });
+    if (!videoId) throw new NotfoundException();
+    return 'https://google.com/';
   }
 }
 

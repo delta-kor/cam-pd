@@ -1,4 +1,5 @@
 import CreateStageDto from '../dtos/create-stage.dto';
+import GetVideoDto from '../dtos/get-video.dto';
 import StageService from '../services/stage.service';
 
 interface StageItem {
@@ -46,6 +47,12 @@ class StageControllerClass {
       concert: stage.concert,
       video_id: stage.videoId,
     });
+  }
+
+  public async getVideo(req: TypedRequest<any, GetVideoDto>, res: TypedResponse): Promise<void> {
+    const uuid = req.query.uuid;
+    const url = await this.stageService.getVideo(uuid);
+    res.redirect(url);
   }
 }
 
