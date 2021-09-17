@@ -20,6 +20,19 @@ class JwtPipe {
         return next();
       }
     });
+    application.use((req: TypedRequest, res: TypedResponse, next: NextFunction) => {
+      if (req.jwt) return next();
+
+      const token = req.query.token;
+      if (!token) return next();
+
+      try {
+        req.jwt = jwt.verify(token, process.env.SECRET!) as JwtPayload;
+        return next();
+      } catch {
+        return next();
+      }
+    });
   }
 }
 

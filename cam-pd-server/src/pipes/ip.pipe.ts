@@ -5,7 +5,7 @@ import UnauthorizedException from '../exceptions/unauthorized.exception';
 class IpPipe {
   public static use(application: Application): void {
     application.use((req: TypedRequest, res: TypedResponse, next: NextFunction) => {
-      const ticket = req.headers.ticket as string;
+      const ticket = (req.headers.ticket as string) || (req.query.ticket as string);
       if (!ticket) throw new UnauthorizedException();
 
       const sectors = ticket.split('.');
