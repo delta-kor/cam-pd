@@ -1,11 +1,13 @@
 import EnvModel from '../models/env.model';
 
 class VimeoUtilClass {
-  private async loadJwt(): Promise<string> {
+  private jwt: string | null = null;
+
+  private async loadJwt(): Promise<void> {
     const jwt = await EnvModel.findOne({ key: 'vimeo_jwt' });
     if (!jwt) throw new Error('Vimeo jwt not found');
 
-    return jwt.value;
+    this.jwt = jwt.value;
   }
 
   public async getVideoUrl(videoId: string): Promise<string> {
