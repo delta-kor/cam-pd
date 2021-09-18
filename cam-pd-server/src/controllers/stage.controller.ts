@@ -1,5 +1,6 @@
 import CreateStageDto from '../dtos/create-stage.dto';
 import GetVideoDto from '../dtos/get-video.dto';
+import UpdateVimeoTokenDto from '../dtos/update-vimeo-token.dto';
 import StageService from '../services/stage.service';
 
 interface StageItem {
@@ -15,6 +16,10 @@ namespace StageResponse {
 
   export interface Create extends StageItem, ApiResponse {
     video_id: string;
+  }
+
+  export interface UpdateVimeoToken extends ApiResponse {
+    updated_token: string;
   }
 }
 
@@ -53,6 +58,15 @@ class StageControllerClass {
     const uuid = req.query.uuid;
     const url = await this.stageService.getVideo(uuid);
     res.redirect(url);
+  }
+
+  public async updateVimeoToken(
+    req: TypedRequest<UpdateVimeoTokenDto>,
+    res: TypedResponse<StageResponse.UpdateVimeoToken>
+  ): Promise<void> {
+    const token = req.body.token;
+    const updatedToken = await this.stageService.updateVimeoToken(token);
+    res.json({ ok: true, updated_token: updatedToken });
   }
 }
 

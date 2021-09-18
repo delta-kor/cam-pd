@@ -1,4 +1,5 @@
 import NotfoundException from '../exceptions/notfound.exception';
+import EnvModel from '../models/env.model';
 import StageModel, { Stage } from '../models/stage.model';
 import VimeoUtil from '../utils/vimeo.util';
 
@@ -19,6 +20,16 @@ class StageServiceClass {
     if (!stage) throw new NotfoundException();
 
     return VimeoUtil.getVideoUrl(stage.videoId);
+  }
+
+  public async updateVimeoToken(token: string): Promise<string> {
+    const jwt = await EnvModel.findOne({ key: 'vimeo_jwt' });
+    if (!jwt) throw new Error('Vimeo jwt not found');
+
+    jwt.value = token;
+    await jwt.save();
+
+    return jwt.value;
   }
 }
 
