@@ -1,5 +1,6 @@
 import NotfoundException from '../exceptions/notfound.exception';
 import StageModel, { Stage } from '../models/stage.model';
+import VimeoUtil from '../utils/vimeo.util';
 
 class StageServiceClass {
   public async get(): Promise<Stage[]> {
@@ -14,9 +15,11 @@ class StageServiceClass {
   }
 
   public async getVideo(uuid: string): Promise<string> {
-    const videoId = await StageModel.findOne({ uuid });
-    if (!videoId) throw new NotfoundException();
-    return 'https://google.com/';
+    const stage = await StageModel.findOne({ uuid });
+    if (!stage) throw new NotfoundException();
+
+    const videoUrl = await VimeoUtil.getVideoUrl(stage.videoId);
+    return videoUrl;
   }
 }
 
