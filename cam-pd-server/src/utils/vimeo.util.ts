@@ -8,8 +8,37 @@ interface VimeoVideoDataItem {
   size: number;
 }
 
+interface CacheItem {
+  videoId: string;
+  cdnUrl: string;
+  cacheUntil: number;
+}
+
 class VimeoUtilClass {
   private jwt: string | null = null;
+  private readonly cache: Map<string, CacheItem> = new Map();
+
+  private getCache(videoId: string): CacheItem | null {
+    const currentTime = Date.now();
+    for (const item of this.cache.values()) {
+      if (item.cacheUntil < currentTime) {
+        this.cache.delete(item.videoId);
+      }
+    }
+
+    return this.cache.get(videoId) || null;
+  }
+
+  private setCache(videoId: string, cdnUrl: string): void {
+    const currentTime = Date.now();
+    const cacheUntil = currentTime + 1000 * 60 * 5;
+    const cacheItem: CacheItem = {
+      videoId,
+      cdnUrl,
+      cacheUntil,
+    };
+    this.cache.set(videoId, cacheItem);
+  }
 
   private async loadJwt(): Promise<void> {
     const jwt = await EnvModel.findOne({ key: 'vimeo_jwt' });
@@ -48,11 +77,17 @@ class VimeoUtilClass {
   }
 
   public async getVideoUrl(videoId: string): Promise<string> {
+    const cachedUrl = this.getCache(videoId);
+    if (cachedUrl) return cachedUrl.cdnUrl;
+
     await this.loadJwt();
+
     const videoUrl = await this.fetchVideoData(videoId);
     const cdnUrl = await VimeoUtilClass.getCdnUrl(videoUrl);
-    const trimedUrl = VimeoUtilClass.trimUrl(cdnUrl);
-    return trimedUrl;
+    const trimmedUrl = VimeoUtilClass.trimUrl(cdnUrl);
+
+    this.setCache(videoId, trimmedUrl);
+    return trimmedUrl;
   }
 
   private static async getCdnUrl(url: string): Promise<string> {
