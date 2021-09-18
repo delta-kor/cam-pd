@@ -19,6 +19,7 @@ class StageServiceClass {
     if (!stage) throw new NotfoundException();
 
     const videoUrl = await VimeoUtil.getVideoUrl(stage.videoId);
+    console.log(videoUrl);
     return videoUrl;
   }
 }

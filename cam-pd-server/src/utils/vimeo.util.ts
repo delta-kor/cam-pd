@@ -49,7 +49,19 @@ class VimeoUtilClass {
 
   public async getVideoUrl(videoId: string): Promise<string> {
     await this.loadJwt();
-    return await this.fetchVideoData(videoId);
+    const videoUrl = await this.fetchVideoData(videoId);
+    const cdnUrl = await VimeoUtilClass.getCdnUrl(videoUrl);
+    const trimedUrl = VimeoUtilClass.trimUrl(cdnUrl);
+    return trimedUrl;
+  }
+
+  private static async getCdnUrl(url: string): Promise<string> {
+    const response = await axios.get(url, { maxRedirects: 0, validateStatus: () => true });
+    return response.headers.location;
+  }
+
+  private static trimUrl(url: string): string {
+    return url.split('?filename')[0];
   }
 }
 
