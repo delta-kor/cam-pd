@@ -53,7 +53,7 @@ class Video extends Component<Props, State> {
       if (id !== this.props.id) return false;
 
       const ticket = Talker.ticket!;
-      const token = Talker.token! + 'lol';
+      const token = Talker.token!;
 
       this.setState({ uuid, ticket, token }, () => {
         this.play();
