@@ -56,7 +56,7 @@ class Video extends Component<Props, State> {
       const token = Talker.token!;
 
       this.setState({ uuid, ticket, token }, () => {
-        this.videoRef.current?.play();
+        this.play();
       });
     });
   }
@@ -66,13 +66,17 @@ class Video extends Component<Props, State> {
     const url = `${Config.base_url}/stage/video?ticket=${encodeURI(this.state.ticket)}&token=${encodeURI(this.state.token)}&uuid=${this.state.uuid}`;
 
     return (
-      <Layout>
+      <Layout onClick={this.play}>
         <ContentWrapper>
           <Content src={url} ref={this.videoRef} />
         </ContentWrapper>
       </Layout>
     );
   }
+
+  private play = () => {
+    this.videoRef.current?.play();
+  };
 }
 
 export default Video;
