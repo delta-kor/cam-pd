@@ -26,10 +26,11 @@ const Layout = styled.div`
 
 interface State {
   scene: Scene;
+  stageUuid: string | null;
 }
 
 class App extends Component<any, State> {
-  public state: State = { scene: Scene.LOADING };
+  public state: State = { scene: Scene.LOADING, stageUuid: null };
 
   public componentDidMount = () => {
     this.preprocess();
@@ -43,7 +44,7 @@ class App extends Component<any, State> {
     if (this.state.scene === Scene.LOADING) scene = <LoadingScene />;
     if (this.state.scene === Scene.REGISTER) scene = <RegisterScene />;
     if (this.state.scene === Scene.SELECTOR) scene = <SelectorScene />;
-    if (this.state.scene === Scene.INGAME) scene = <IngameScene />;
+    if (this.state.scene === Scene.INGAME) scene = <IngameScene uuid={this.state.stageUuid!} />;
 
     return <Layout>{scene!}</Layout>;
   }
@@ -66,7 +67,7 @@ class App extends Component<any, State> {
   };
 
   private startGame = (uuid: string) => {
-    this.setState({ scene: Scene.INGAME });
+    this.setState({ scene: Scene.INGAME, stageUuid: uuid });
   };
 }
 
