@@ -59,6 +59,10 @@ class Video extends Component<Props, State> {
         this.play();
       });
     });
+
+    this.videoRef.current?.addEventListener('contextmenu', e => {
+      e.preventDefault();
+    });
   }
 
   public render() {
