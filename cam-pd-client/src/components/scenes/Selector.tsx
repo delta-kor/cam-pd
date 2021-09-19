@@ -4,6 +4,7 @@ import Config from '../../config';
 import Talker from '../../services/talker';
 import Transmitter from '../../services/transmitter';
 import { Colors } from '../../styles';
+import PrimaryButton from '../actions/PrimaryButton';
 import StageSelector from '../actions/StageSelector';
 import Video from '../medias/Video';
 
@@ -23,6 +24,13 @@ const StageSelectorTitle = styled.div`
   font-weight: bold;
   font-size: 24px;
   color: ${Colors.WHITE};
+`;
+
+const SideMenuWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  row-gap: 24px;
+  align-items: center;
 `;
 
 const StageInfoWrapper = styled.div`
@@ -53,9 +61,12 @@ class SelectorScene extends Component<any, State> {
           <StageSelectorTitle>곡 선택</StageSelectorTitle>
           <StageSelector stages={this.state.stages} onVideoSelect={this.onSelectorChange} />
         </StageSelectorWrapper>
-        <StageInfoWrapper>
-          <Video id={'stage-select'} />
-        </StageInfoWrapper>
+        <SideMenuWrapper>
+          <StageInfoWrapper>
+            <Video id={'stage-select'} />
+          </StageInfoWrapper>
+          <PrimaryButton content={'시작하기'} onClick={this.onStart} />
+        </SideMenuWrapper>
       </Layout>
     );
   }
@@ -69,6 +80,10 @@ class SelectorScene extends Component<any, State> {
 
   private onSelectorChange = (uuid: string) => {
     Transmitter.emit('playvideo', 'stage-select', uuid);
+  };
+
+  private onStart = () => {
+    console.log('Start!');
   };
 }
 
