@@ -2,6 +2,7 @@ import EventEmitter from 'events';
 
 interface TransmitterEvents {
   registercomplete(): void;
+  playvideo(id: string, uuid: string): void;
 }
 
 declare interface TransmitterClass {

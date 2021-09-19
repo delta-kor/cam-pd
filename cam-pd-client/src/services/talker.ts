@@ -2,8 +2,8 @@ import Config from '../config';
 
 class TalkerClass {
   private readonly baseUrl: string;
-  private ticket!: string;
-  private token: string | null;
+  public ticket!: string;
+  public token: string | null;
 
   constructor(baseUrl: string) {
     this.baseUrl = baseUrl;

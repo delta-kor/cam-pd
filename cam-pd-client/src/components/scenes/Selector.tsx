@@ -2,8 +2,10 @@ import { Component } from 'react';
 import styled from 'styled-components';
 import Config from '../../config';
 import Talker from '../../services/talker';
+import Transmitter from '../../services/transmitter';
 import { Colors } from '../../styles';
 import StageSelector from '../actions/StageSelector';
+import Video from '../medias/Video';
 
 const Layout = styled.div`
   display: flex;
@@ -49,9 +51,11 @@ class SelectorScene extends Component<any, State> {
       <Layout>
         <StageSelectorWrapper>
           <StageSelectorTitle>곡 선택</StageSelectorTitle>
-          <StageSelector stages={this.state.stages} />
+          <StageSelector stages={this.state.stages} onVideoSelect={this.onSelectorChange} />
         </StageSelectorWrapper>
-        <StageInfoWrapper></StageInfoWrapper>
+        <StageInfoWrapper>
+          <Video id={'stage-select'} />
+        </StageInfoWrapper>
       </Layout>
     );
   }
@@ -61,6 +65,10 @@ class SelectorScene extends Component<any, State> {
     if (!response.ok) return alert(response.message || Config.default_error_message);
 
     this.setState({ stages: response.stages });
+  };
+
+  private onSelectorChange = (uuid: string) => {
+    Transmitter.emit('playvideo', 'stage-select', uuid);
   };
 }
 

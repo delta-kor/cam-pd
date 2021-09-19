@@ -14,6 +14,7 @@ const Layout = styled.div`
 
 interface Props {
   stages: Stage[];
+  onVideoSelect(uuid: string): void;
 }
 
 interface State {
@@ -22,6 +23,12 @@ interface State {
 
 class StageSelector extends Component<Props, State> {
   public state = { selected: 0 };
+
+  public componentDidUpdate = (prevProps: Props) => {
+    if (prevProps.stages !== this.props.stages) {
+      this.onSelectorChange(0, this.props.stages[0].uuid);
+    }
+  };
 
   public render() {
     return (
@@ -32,12 +39,17 @@ class StageSelector extends Component<Props, State> {
             title={stage.title}
             concert={stage.concert}
             active={this.state.selected === index}
-            onClick={() => this.setState({ selected: index })}
+            onClick={() => this.onSelectorChange(index, stage.uuid)}
           />
         ))}
       </Layout>
     );
   }
+
+  private onSelectorChange = (index: number, uuid: string) => {
+    this.setState({ selected: index });
+    this.props.onVideoSelect(uuid);
+  };
 }
 
 const ItemLayout = styled.div<{ active: boolean }>`
