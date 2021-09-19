@@ -45,10 +45,11 @@ const StageInfoWrapper = styled.div`
 
 interface State {
   stages: Stage[];
+  uuid: string | null;
 }
 
 class SelectorScene extends Component<any, State> {
-  public state = { stages: [] };
+  public state: State = { stages: [], uuid: null };
 
   public componentDidMount = () => {
     this.loadStages();
@@ -75,15 +76,16 @@ class SelectorScene extends Component<any, State> {
     const response = await Talker.get<ApiResponse.Stage.Get>('/stage');
     if (!response.ok) return alert(response.message || Config.default_error_message);
 
-    this.setState({ stages: response.stages });
+    this.setState({ stages: response.stages, uuid: response.stages[0].uuid });
   };
 
   private onSelectorChange = (uuid: string) => {
-    Transmitter.emit('playvideo', 'stage-select', uuid);
+    Transmitter.emit('videoplay', 'stage-select', uuid);
+    this.setState({ uuid });
   };
 
   private onStart = () => {
-    console.log('Start!');
+    if (this.state.uuid) Transmitter.emit('gamestart', this.state.uuid);
   };
 }
 

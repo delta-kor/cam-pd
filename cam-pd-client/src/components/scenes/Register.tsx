@@ -62,7 +62,7 @@ interface State {
 }
 
 class RegisterScene extends Component<any, State> {
-  public state = { nickname: '', errorMessage: null };
+  public state: State = { nickname: '', errorMessage: null };
 
   public render() {
     return (

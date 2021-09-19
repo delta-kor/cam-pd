@@ -1,5 +1,6 @@
 import { Component, ReactElement } from 'react';
 import styled from 'styled-components';
+import IngameScene from './components/scenes/Ingame';
 import LoadingScene from './components/scenes/Loading';
 import RegisterScene from './components/scenes/Register';
 import SelectorScene from './components/scenes/Selector';
@@ -12,6 +13,7 @@ enum Scene {
   LOADING,
   REGISTER,
   SELECTOR,
+  INGAME,
 }
 
 const Layout = styled.div`
@@ -27,12 +29,13 @@ interface State {
 }
 
 class App extends Component<any, State> {
-  public state = { scene: Scene.LOADING };
+  public state: State = { scene: Scene.LOADING };
 
   public componentDidMount = () => {
     this.preprocess();
 
-    Transmitter.on('registercomplete', () => this.preprocess());
+    Transmitter.on('registercomplete', this.preprocess);
+    Transmitter.on('gamestart', this.startGame);
   };
 
   public render() {
@@ -40,6 +43,7 @@ class App extends Component<any, State> {
     if (this.state.scene === Scene.LOADING) scene = <LoadingScene />;
     if (this.state.scene === Scene.REGISTER) scene = <RegisterScene />;
     if (this.state.scene === Scene.SELECTOR) scene = <SelectorScene />;
+    if (this.state.scene === Scene.INGAME) scene = <IngameScene />;
 
     return <Layout>{scene!}</Layout>;
   }
@@ -59,6 +63,10 @@ class App extends Component<any, State> {
     }
 
     this.setState({ scene: Scene.SELECTOR });
+  };
+
+  private startGame = (uuid: string) => {
+    this.setState({ scene: Scene.INGAME });
   };
 }
 

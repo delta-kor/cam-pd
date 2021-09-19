@@ -39,7 +39,7 @@ interface State {
 }
 
 class Video extends Component<Props, State> {
-  public state = { uuid: '', ticket: '', token: '' };
+  public state: State = { uuid: '', ticket: '', token: '' };
 
   public videoRef: RefObject<HTMLVideoElement>;
 
@@ -49,7 +49,7 @@ class Video extends Component<Props, State> {
   }
 
   public componentDidMount = () => {
-    Transmitter.on('playvideo', (id, uuid) => {
+    Transmitter.on('videoplay', (id, uuid) => {
       if (id !== this.props.id) return false;
 
       const ticket = Talker.ticket!;

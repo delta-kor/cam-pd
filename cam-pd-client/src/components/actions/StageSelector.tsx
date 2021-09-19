@@ -22,7 +22,7 @@ interface State {
 }
 
 class StageSelector extends Component<Props, State> {
-  public state = { selected: 0 };
+  public state: State = { selected: 0 };
 
   public componentDidUpdate = (prevProps: Props) => {
     if (prevProps.stages !== this.props.stages) {

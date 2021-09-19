@@ -2,7 +2,8 @@ import EventEmitter from 'events';
 
 interface TransmitterEvents {
   registercomplete(): void;
-  playvideo(id: string, uuid: string): void;
+  videoplay(id: string, uuid: string): void;
+  gamestart(uuid: string): void;
 }
 
 declare interface TransmitterClass {
