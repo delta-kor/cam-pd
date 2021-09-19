@@ -48,12 +48,12 @@ class Video extends Component<Props, State> {
     this.videoRef = React.createRef<HTMLVideoElement>();
   }
 
-  public componentDidMount() {
+  public componentDidMount = () => {
     Transmitter.on('playvideo', (id, uuid) => {
       if (id !== this.props.id) return false;
 
       const ticket = Talker.ticket!;
-      const token = Talker.token!;
+      const token = Talker.token! + 'lol';
 
       this.setState({ uuid, ticket, token }, () => {
         this.play();
@@ -63,9 +63,13 @@ class Video extends Component<Props, State> {
     this.videoRef.current?.addEventListener('contextmenu', e => {
       e.preventDefault();
     });
-  }
+  };
 
   public render() {
+    if (!this.state.ticket || !this.state.token || !this.state.uuid) {
+      return <Layout />;
+    }
+
     // prettier-ignore
     const url = `${Config.base_url}/stage/video?ticket=${encodeURI(this.state.ticket)}&token=${encodeURI(this.state.token)}&uuid=${this.state.uuid}`;
 
