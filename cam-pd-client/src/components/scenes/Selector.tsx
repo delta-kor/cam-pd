@@ -7,6 +7,7 @@ import StageSelector from '../actions/StageSelector';
 
 const Layout = styled.div`
   display: flex;
+  align-items: center;
   column-gap: 112px;
 `;
 
@@ -20,6 +21,16 @@ const StageSelectorTitle = styled.div`
   font-weight: bold;
   font-size: 24px;
   color: ${Colors.WHITE};
+`;
+
+const StageInfoWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  row-gap: 16px;
+  padding: 16px;
+  width: 480px;
+  background: ${Colors.GRAY};
+  border-radius: 16px;
 `;
 
 interface State {
@@ -40,6 +51,7 @@ class SelectorScene extends Component<any, State> {
           <StageSelectorTitle>곡 선택</StageSelectorTitle>
           <StageSelector stages={this.state.stages} />
         </StageSelectorWrapper>
+        <StageInfoWrapper></StageInfoWrapper>
       </Layout>
     );
   }
