@@ -1,13 +1,17 @@
-import { Component } from 'react';
+import React, { Component, RefObject } from 'react';
 import styled from 'styled-components';
 import Config from '../../config';
 import Talker from '../../services/talker';
 import { Colors } from '../../styles';
 
+const MaxLayoutWidth = '900px';
+
 const Layout = styled.div`
   position: relative;
   width: 100%;
   height: 100%;
+  margin: 0 auto;
+  max-width: ${MaxLayoutWidth};
 `;
 
 const Video = styled.video`
@@ -28,30 +32,57 @@ const SelectorWrapper = styled.div`
   height: 100%;
 `;
 
-const SelectorItem = styled.div`
+const SelectorItem = styled.div<{ active: boolean }>`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   position: relative;
-  height: calc(50vw / 2 * (9 / 16));
+  height: calc(min(50vw, ${MaxLayoutWidth}) / 2 * (9 / 16));
+  background: ${({ active }) => (active ? 'transparent' : Colors.BLACK)};
+  font-weight: bold;
+  font-size: 24px;
+  color: ${Colors.WHITE};
+  user-select: none;
 `;
 
-const SelectorTitle = styled.div`
+const SelectorTag = styled.div`
   position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   top: 0;
   right: 0;
+  min-width: 18%;
+  min-height: 10%;
   padding: 4px 16px;
   font-weight: normal;
   font-size: 12px;
   color: ${Colors.WHITE};
   background: ${Colors.BLACK};
-  user-select: none;
 `;
 
 interface Props {
   uuid: string;
 }
 
-interface State {}
+interface State {
+  selectorCount: number;
+}
 
 class CameraSelector extends Component<Props, State> {
+  public state: State = { selectorCount: 6 };
+  private layoutRef: RefObject<HTMLDivElement> = React.createRef();
+
+  public componentDidMount = () => {
+    this.updateSelectorCount();
+
+    window.addEventListener('resize', this.updateSelectorCount);
+  };
+
+  public componentWillUnmount = () => {
+    window.removeEventListener('resize', this.updateSelectorCount);
+  };
+
   public render() {
     const ticket = Talker.ticket!;
     const token = Talker.token!;
@@ -62,21 +93,35 @@ class CameraSelector extends Component<Props, State> {
 
     const selectorItems = [];
 
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < this.state.selectorCount; i++) {
+      const isActive = i > 0 && i < 6;
       selectorItems.push(
-        <SelectorItem key={i}>
-          <SelectorTitle>CAM{i + 1}</SelectorTitle>
+        <SelectorItem active={isActive} key={i}>
+          <SelectorTag>CAM{i + 1}</SelectorTag>
+          {!isActive && 'NO SIGNAL'}
         </SelectorItem>
       );
     }
 
     return (
-      <Layout>
+      <Layout ref={this.layoutRef}>
         <Video src={url} />
         <SelectorWrapper>{selectorItems}</SelectorWrapper>
       </Layout>
     );
   }
+
+  private updateSelectorCount = () => {
+    if (!this.layoutRef.current) return false;
+
+    const { clientWidth: width, clientHeight: height } = this.layoutRef.current;
+
+    const selectorHeight = (width / 2) * (9 / 16);
+    const rowCount = Math.floor(height / selectorHeight);
+    const iteration = rowCount * 2;
+
+    this.setState({ selectorCount: iteration });
+  };
 }
 
 export default CameraSelector;

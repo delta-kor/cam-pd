@@ -41,12 +41,7 @@ interface State {
 class Video extends Component<Props, State> {
   public state: State = { uuid: '', ticket: '', token: '' };
 
-  public videoRef: RefObject<HTMLVideoElement>;
-
-  constructor(props: any) {
-    super(props);
-    this.videoRef = React.createRef<HTMLVideoElement>();
-  }
+  public videoRef: RefObject<HTMLVideoElement> = React.createRef();
 
   public componentDidMount = () => {
     Transmitter.on('videoplay', (id, uuid) => {
@@ -60,9 +55,11 @@ class Video extends Component<Props, State> {
       });
     });
 
-    this.videoRef.current?.addEventListener('contextmenu', e => {
-      e.preventDefault();
-    });
+    this.videoRef.current?.addEventListener('contextmenu', this.onVideoContextMenu);
+  };
+
+  public componentWillUnmount = () => {
+    this.videoRef.current?.removeEventListener('contextmenu', this.onVideoContextMenu);
   };
 
   public render() {
@@ -81,6 +78,10 @@ class Video extends Component<Props, State> {
       </Layout>
     );
   }
+
+  private onVideoContextMenu = (e: MouseEvent) => {
+    e.preventDefault();
+  };
 
   private play = () => {
     this.videoRef.current?.play();
