@@ -38,7 +38,7 @@ interface State {
   token: string;
 }
 
-class Video extends Component<Props, State> {
+class PreviewVideo extends Component<Props, State> {
   public state: State = { uuid: '', ticket: '', token: '' };
 
   public videoRef: RefObject<HTMLVideoElement> = React.createRef();
@@ -97,4 +97,4 @@ class Video extends Component<Props, State> {
   };
 }
 
-export default Video;
+export default PreviewVideo;

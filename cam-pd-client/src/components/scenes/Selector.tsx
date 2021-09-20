@@ -6,7 +6,7 @@ import Transmitter from '../../services/transmitter';
 import { Colors } from '../../styles';
 import PrimaryButton from '../actions/PrimaryButton';
 import StageSelector from '../actions/StageSelector';
-import Video from '../medias/Video';
+import PreviewVideo from '../medias/PreviewVideo';
 
 const Layout = styled.div`
   display: flex;
@@ -64,7 +64,7 @@ class SelectorScene extends Component<any, State> {
         </StageSelectorWrapper>
         <SideMenuWrapper>
           <StageInfoWrapper>
-            <Video id={'stage-select'} />
+            <PreviewVideo id={'stage-select'} />
           </StageInfoWrapper>
           <PrimaryButton content={'시작하기'} onClick={this.onStart} />
         </SideMenuWrapper>
