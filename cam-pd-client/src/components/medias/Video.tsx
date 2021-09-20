@@ -11,13 +11,13 @@ const Layout = styled.div`
   overflow: hidden;
 `;
 
-const ContentWrapper = styled.div`
+const ContentWrapper = styled.div<{ ingame: boolean }>`
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  border-radius: 8px;
+  border-radius: ${({ ingame }) => (ingame ? '0' : '8px')};
   overflow: hidden;
 `;
 
@@ -48,11 +48,13 @@ class Video extends Component<Props, State> {
 
   public componentDidMount = () => {
     Transmitter.on('videoplay', this.onVideoPlay);
+    Transmitter.on('selectorselect', this.onSelectorSelect);
     this.videoRef.current?.addEventListener('contextmenu', this.onVideoContextMenu);
   };
 
   public componentWillUnmount = () => {
     Transmitter.removeListener('videoplay', this.onVideoPlay);
+    Transmitter.removeListener('selectorselect', this.onSelectorSelect);
     this.videoRef.current?.removeEventListener('contextmenu', this.onVideoContextMenu);
   };
 
@@ -63,10 +65,11 @@ class Video extends Component<Props, State> {
 
     // prettier-ignore
     const url = `${Config.base_url}/stage/video?ticket=${encodeURI(this.state.ticket)}&token=${encodeURI(this.state.token)}&uuid=${this.state.uuid}`;
+    const ingame = this.props.type === 'ingame';
 
     return (
       <Layout onClick={this.onVideoClick}>
-        <ContentWrapper>
+        <ContentWrapper ingame={ingame}>
           <Content src={url} ref={this.videoRef} />
         </ContentWrapper>
       </Layout>
@@ -89,6 +92,7 @@ class Video extends Component<Props, State> {
   };
 
   private onVideoClick = () => {
+    if (this.props.type === 'ingame') return false;
     if (this.videoRef.current?.paused) this.play();
     else this.pause();
   };
@@ -99,6 +103,21 @@ class Video extends Component<Props, State> {
 
   private pause = () => {
     this.videoRef.current?.pause();
+  };
+
+  private onSelectorSelect = (index: number) => {
+    const video = this.videoRef.current;
+    if (!video) return false;
+
+    let top: string = '0';
+    let left: string = '0';
+
+    if ([0, 2, 4].includes(index)) left = '-100%';
+    if ([1, 2].includes(index)) top = '-100%';
+    if ([3, 4].includes(index)) top = '-200%';
+
+    video.style.top = top;
+    video.style.left = left;
   };
 }
 

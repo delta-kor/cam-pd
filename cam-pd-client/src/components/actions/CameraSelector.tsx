@@ -145,6 +145,7 @@ class CameraSelector extends Component<Props, State> {
 
   private startGame = () => {
     this.playVideo();
+    this.onSelectorClick(5);
   };
 
   private playVideo = () => {
