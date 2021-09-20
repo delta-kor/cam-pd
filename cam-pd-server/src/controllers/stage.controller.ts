@@ -3,6 +3,7 @@ import CreateStageDto from '../dtos/create-stage.dto';
 import GetVideoDto from '../dtos/get-video.dto';
 import UpdateVimeoTokenDto from '../dtos/update-vimeo-token.dto';
 import StageService from '../services/stage.service';
+import ScoreData = StageResponse.ScoreData;
 
 interface StageItem {
   uuid: string;
@@ -21,6 +22,12 @@ namespace StageResponse {
 
   export interface UpdateVimeoToken extends ApiResponse {
     updated_token: string;
+  }
+
+  export interface ScoreData extends ApiResponse {
+    score: number;
+    personal_best: number;
+    world_best: number;
   }
 }
 
@@ -71,11 +78,14 @@ class StageControllerClass {
     res.json({ ok: true, updated_token: updatedToken });
   }
 
-  public async checkData(req: TypedRequest<CheckDataDto>, res: TypedResponse<any>): Promise<void> {
+  public async checkData(
+    req: TypedRequest<CheckDataDto>,
+    res: TypedResponse<ScoreData>
+  ): Promise<void> {
     const uuid = req.body.uuid;
     const data = req.body.data;
     const score = await this.stageService.checkData(uuid, data);
-    res.json({ ok: true, score });
+    res.json({ ok: true, score, personal_best: 0, world_best: 0 });
   }
 }
 
