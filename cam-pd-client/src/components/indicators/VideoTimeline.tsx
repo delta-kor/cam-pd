@@ -98,7 +98,6 @@ class VideoTimeline extends Component<Props, State> {
     const mouseDeltaX = e.clientX - left;
     const percentage = mouseDeltaX / width;
 
-    console.log(width);
     const current = this.state.total * percentage;
 
     Transmitter.emit('setvideocurrenttime', current);

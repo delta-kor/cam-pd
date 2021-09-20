@@ -73,10 +73,11 @@ class Video extends Component<Props, State> {
     const url = `${Config.base_url}/stage/video?ticket=${encodeURI(this.state.ticket)}&token=${encodeURI(this.state.token)}&uuid=${this.state.uuid}`;
 
     const ingame = this.props.type === 'ingame';
+    const result = this.props.type === 'result';
 
     return (
       <Layout onClick={this.onVideoClick}>
-        <ContentWrapper round={ingame}>
+        <ContentWrapper round={!ingame && !result}>
           <Content src={url} ref={this.onVideoMounted} muted={ingame} />
         </ContentWrapper>
       </Layout>
@@ -132,7 +133,8 @@ class Video extends Component<Props, State> {
 
     video.style.top = top;
     video.style.left = left;
-    video.currentTime = currentTime;
+
+    if (Math.abs(currentTime - video.currentTime) > 0.2) video.currentTime = currentTime;
   };
 
   private onTimeUpdate = () => {
