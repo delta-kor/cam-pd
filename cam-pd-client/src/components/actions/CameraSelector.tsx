@@ -2,6 +2,7 @@ import React, { Component, RefObject } from 'react';
 import styled from 'styled-components';
 import Config from '../../config';
 import Talker from '../../services/talker';
+import Transmitter from '../../services/transmitter';
 import { Colors } from '../../styles';
 
 const MaxLayoutWidth = '900px';
@@ -139,6 +140,7 @@ class CameraSelector extends Component<Props, State> {
     if (elementIndex < 1 || elementIndex > 5) return false;
     const index = elementIndex - 1;
     this.setState({ active: index });
+    Transmitter.emit('selectorselect', index);
   };
 
   private startGame = () => {
