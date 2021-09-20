@@ -62,8 +62,12 @@ interface Props {
 
 class IngameScene extends Component<Props, any> {
   public componentDidMount = () => {
-    Transmitter.emit('gamevideostart');
     Transmitter.emit('videoplay', 'game-program', this.props.uuid);
+    Transmitter.on('videoload', this.onProgramVideoLoad);
+  };
+
+  public componentWillUnmount = () => {
+    Transmitter.removeListener('videoload', this.onProgramVideoLoad);
   };
 
   public render() {
@@ -84,6 +88,11 @@ class IngameScene extends Component<Props, any> {
       </Layout>
     );
   }
+
+  private onProgramVideoLoad = (id: string) => {
+    if (id !== 'game-program') return false;
+    Transmitter.emit('gamevideostart');
+  };
 }
 
 export default IngameScene;

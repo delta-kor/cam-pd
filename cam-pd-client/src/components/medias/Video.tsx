@@ -1,4 +1,4 @@
-import React, { Component, RefObject } from 'react';
+import React, { Component } from 'react';
 import styled from 'styled-components';
 import Config from '../../config';
 import Talker from '../../services/talker';
@@ -44,18 +44,17 @@ interface State {
 class Video extends Component<Props, State> {
   public state: State = { uuid: '', ticket: '', token: '' };
 
-  public videoRef: RefObject<HTMLVideoElement> = React.createRef();
+  public video: HTMLVideoElement | null = null;
 
   public componentDidMount = () => {
     Transmitter.on('videoplay', this.onVideoPlay);
     Transmitter.on('selectorselect', this.onSelectorSelect);
-    this.videoRef.current?.addEventListener('contextmenu', this.onVideoContextMenu);
   };
 
   public componentWillUnmount = () => {
     Transmitter.removeListener('videoplay', this.onVideoPlay);
     Transmitter.removeListener('selectorselect', this.onSelectorSelect);
-    this.videoRef.current?.removeEventListener('contextmenu', this.onVideoContextMenu);
+    this.video?.removeEventListener('contextmenu', this.onVideoContextMenu);
   };
 
   public render() {
@@ -70,11 +69,18 @@ class Video extends Component<Props, State> {
     return (
       <Layout onClick={this.onVideoClick}>
         <ContentWrapper ingame={ingame}>
-          <Content src={url} ref={this.videoRef} />
+          <Content src={url} ref={this.onVideoMounted} muted={ingame} />
         </ContentWrapper>
       </Layout>
     );
   }
+
+  private onVideoMounted = (element: HTMLVideoElement) => {
+    if (!element) return false;
+    this.video = element;
+    this.video.addEventListener('contextmenu', this.onVideoContextMenu);
+    Transmitter.emit('videoload', this.props.id);
+  };
 
   private onVideoPlay = (id: string, uuid: string) => {
     if (id !== this.props.id) return false;
@@ -93,20 +99,20 @@ class Video extends Component<Props, State> {
 
   private onVideoClick = () => {
     if (this.props.type === 'ingame') return false;
-    if (this.videoRef.current?.paused) this.play();
+    if (this.video?.paused) this.play();
     else this.pause();
   };
 
   private play = () => {
-    this.videoRef.current?.play();
+    this.video?.play();
   };
 
   private pause = () => {
-    this.videoRef.current?.pause();
+    this.video?.pause();
   };
 
-  private onSelectorSelect = (index: number) => {
-    const video = this.videoRef.current;
+  private onSelectorSelect = (index: number, currentTime: number) => {
+    const video = this.video;
     if (!video) return false;
 
     let top: string = '0';
@@ -118,6 +124,7 @@ class Video extends Component<Props, State> {
 
     video.style.top = top;
     video.style.left = left;
+    video.currentTime = currentTime;
   };
 }
 

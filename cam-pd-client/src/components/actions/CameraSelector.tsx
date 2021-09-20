@@ -86,6 +86,7 @@ class CameraSelector extends Component<Props, State> {
   public componentDidMount = () => {
     this.updateSelectorCount();
     window.addEventListener('resize', this.updateSelectorCount);
+    this.videoRef.current?.addEventListener('pause', this.onVideoPause);
     Transmitter.on('gamevideostart', this.startGame);
   };
 
@@ -139,13 +140,19 @@ class CameraSelector extends Component<Props, State> {
   private onSelectorClick = (elementIndex: number) => {
     if (elementIndex < 1 || elementIndex > 5) return false;
     const index = elementIndex - 1;
+    if (index === this.state.active) return false;
     this.setState({ active: index });
-    Transmitter.emit('selectorselect', index);
+    Transmitter.emit('selectorselect', index, this.videoRef.current!.currentTime);
   };
 
   private startGame = () => {
     this.playVideo();
-    this.onSelectorClick(5);
+    Transmitter.emit('selectorselect', 4, this.videoRef.current!.currentTime);
+  };
+
+  private onVideoPause = () => {
+    this.playVideo();
+    this.onSelectorClick(this.state.active + 1);
   };
 
   private playVideo = () => {
