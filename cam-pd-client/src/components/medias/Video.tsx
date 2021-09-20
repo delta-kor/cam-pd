@@ -11,13 +11,13 @@ const Layout = styled.div`
   overflow: hidden;
 `;
 
-const ContentWrapper = styled.div<{ ingame: boolean }>`
+const ContentWrapper = styled.div<{ round: boolean }>`
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  border-radius: ${({ ingame }) => (ingame ? '0' : '8px')};
+  border-radius: ${({ round }) => (round ? '8px' : '0')};
   overflow: hidden;
 `;
 
@@ -28,7 +28,7 @@ const Content = styled.video`
   width: 200%;
 `;
 
-type VideoType = 'preview' | 'ingame';
+type VideoType = 'preview' | 'ingame' | 'result';
 
 interface Props {
   id: string;
@@ -43,18 +43,23 @@ interface State {
 
 class Video extends Component<Props, State> {
   public state: State = { uuid: '', ticket: '', token: '' };
+  public interval: any;
 
   public video: HTMLVideoElement | null = null;
 
   public componentDidMount = () => {
     Transmitter.on('videoplay', this.onVideoPlay);
     Transmitter.on('selectorselect', this.onSelectorSelect);
+    if (this.props.type === 'result') {
+      this.interval = setInterval(this.onTimeUpdate, 50);
+    }
   };
 
   public componentWillUnmount = () => {
     Transmitter.removeListener('videoplay', this.onVideoPlay);
     Transmitter.removeListener('selectorselect', this.onSelectorSelect);
     this.video?.removeEventListener('contextmenu', this.onVideoContextMenu);
+    clearInterval(this.interval);
   };
 
   public render() {
@@ -64,11 +69,12 @@ class Video extends Component<Props, State> {
 
     // prettier-ignore
     const url = `${Config.base_url}/stage/video?ticket=${encodeURI(this.state.ticket)}&token=${encodeURI(this.state.token)}&uuid=${this.state.uuid}`;
+
     const ingame = this.props.type === 'ingame';
 
     return (
       <Layout onClick={this.onVideoClick}>
-        <ContentWrapper ingame={ingame}>
+        <ContentWrapper round={ingame}>
           <Content src={url} ref={this.onVideoMounted} muted={ingame} />
         </ContentWrapper>
       </Layout>
@@ -125,6 +131,11 @@ class Video extends Component<Props, State> {
     video.style.top = top;
     video.style.left = left;
     video.currentTime = currentTime;
+  };
+
+  private onTimeUpdate = () => {
+    if (!this.video) return false;
+    Transmitter.emit('gamevideotimeupdate', this.video.currentTime, this.video.duration);
   };
 }
 

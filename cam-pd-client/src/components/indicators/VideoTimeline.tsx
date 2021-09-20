@@ -19,12 +19,14 @@ const TimeLabel = styled.div`
   font-weight: normal;
   font-size: 18px;
   color: ${Colors.WHITE};
+  user-select: none;
 `;
 
-const IndicatorWrapper = styled.div`
+const IndicatorWrapper = styled.div<{ controllable: boolean }>`
   height: 8px;
   background: ${Colors.LIGHT_GRAY};
   border-radius: 100px;
+  cursor: ${({ controllable }) => (controllable ? 'pointer' : 'unset')};
 `;
 
 const Indicator = styled(motion.div)`
@@ -34,12 +36,16 @@ const Indicator = styled(motion.div)`
   border-radius: 100px;
 `;
 
+interface Props {
+  controllable?: boolean;
+}
+
 interface State {
   current: number;
   total: number;
 }
 
-class VideoTimeline extends Component<any, State> {
+class VideoTimeline extends Component<Props, State> {
   public state: State = { current: 0, total: 0 };
 
   public componentDidMount = () => {
@@ -61,7 +67,7 @@ class VideoTimeline extends Component<any, State> {
           <TimeLabel>{currentTime}</TimeLabel>
           <TimeLabel>{totalTime}</TimeLabel>
         </TimeLabelWrapper>
-        <IndicatorWrapper>
+        <IndicatorWrapper controllable={!!this.props.controllable}>
           <Indicator animate={{ width: `${percentage * 100}%` }} transition={{ duration: 0 }} />
         </IndicatorWrapper>
       </Layout>

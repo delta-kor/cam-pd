@@ -174,6 +174,7 @@ class CameraSelector extends Component<Props, State> {
 
   private playVideo = () => {
     this.videoRef.current?.play();
+    this.videoRef.current!.currentTime = 90;
   };
 }
 
