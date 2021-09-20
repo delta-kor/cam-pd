@@ -71,7 +71,11 @@ class VideoTimeline extends Component<Props, State> {
           <TimeLabel>{totalTime}</TimeLabel>
         </TimeLabelWrapper>
         <IndicatorWrapper controllable={!!this.props.controllable} ref={this.indicatorRef}>
-          <Indicator animate={{ width: `${percentage * 100}%` }} transition={{ duration: 0 }} />
+          <Indicator
+            animate={{ width: `${percentage * 100}%` }}
+            transition={{ duration: 0 }}
+            data-indicator
+          />
         </IndicatorWrapper>
       </Layout>
     );
@@ -84,15 +88,17 @@ class VideoTimeline extends Component<Props, State> {
   private onIndicatorClick = (e: MouseEvent) => {
     if (!this.props.controllable) return false;
 
-    const target = e.target as HTMLDivElement;
+    let target = e.target as HTMLDivElement;
+    if (target.dataset.indicator) target = target.parentElement as HTMLDivElement;
 
     const bounding = target.getBoundingClientRect();
     const left = bounding.x;
-    const width = bounding.width;
+    const width = target.clientWidth;
 
     const mouseDeltaX = e.clientX - left;
     const percentage = mouseDeltaX / width;
 
+    console.log(width);
     const current = this.state.total * percentage;
 
     Transmitter.emit('setvideocurrenttime', current);

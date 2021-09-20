@@ -128,7 +128,7 @@ class GameResultScene extends Component<Props, State> {
   };
 
   private onTimeUpdate = (current: number) => {
-    const currentIndex = getCurrentData(this.props.inputData, current);
+    const currentIndex = getCurrentData(this.props.inputData, current * 1000);
     if (currentIndex !== this.lastIndex) {
       Transmitter.emit('selectorselect', currentIndex, current);
       this.lastIndex = currentIndex;

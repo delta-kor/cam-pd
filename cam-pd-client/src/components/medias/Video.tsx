@@ -143,6 +143,7 @@ class Video extends Component<Props, State> {
   private onSetVideoCurrentTime = (current: number) => {
     if (!this.video) return false;
     this.video.currentTime = current;
+    this.video.play();
   };
 }
 
