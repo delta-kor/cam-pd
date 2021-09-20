@@ -50,7 +50,7 @@ class App extends Component<any, State> {
     if (this.state.scene === Scene.SELECTOR) scene = <SelectorScene />;
     if (this.state.scene === Scene.INGAME) scene = <IngameScene uuid={this.state.stageUuid!} />;
     if (this.state.scene === Scene.GAME_RESULT)
-      scene = <GameResultScene inputData={this.state.inputData} />;
+      scene = <GameResultScene uuid={this.state.stageUuid!} inputData={this.state.inputData} />;
 
     return <Layout>{scene!}</Layout>;
   }

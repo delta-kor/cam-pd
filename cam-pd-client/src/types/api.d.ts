@@ -13,6 +13,12 @@ namespace ApiResponse {
     export interface Get {
       stages: Stage[];
     }
+
+    export interface CheckData {
+      score: number;
+      personal_best: number;
+      world_best: number;
+    }
   }
 }
 
