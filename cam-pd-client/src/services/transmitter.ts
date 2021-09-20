@@ -9,6 +9,7 @@ interface TransmitterEvents {
   videoload(id: string): void;
   selectorselect(index: number, currentTime: number): void;
   gamevideotimeupdate(current: number, total: number): void;
+  setvideocurrenttime(current: number): void;
   gameend(data: InputData): void;
 }
 

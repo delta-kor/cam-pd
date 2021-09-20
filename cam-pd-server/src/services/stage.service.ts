@@ -42,6 +42,8 @@ class StageServiceClass {
     const stage: Stage | null = await StageModel.findOne({ uuid });
     if (!stage) throw new NotfoundException();
 
+    if (!data[0]) data[0] = 4;
+
     const scoresheet: ScoreSheet = {};
 
     const rawScoresheetItems = stage.scoresheet.split('-');
@@ -57,8 +59,8 @@ class StageServiceClass {
 
     let score: number = 0;
 
-    for (let i = 0; i < stageLength / 5; i++) {
-      const current = i * 5;
+    for (let i = 0; i < stageLength / 10; i++) {
+      const current = i * 10;
       const scoresheetData = getCurrentData(scoresheet, current) as number[];
       const inputData = getCurrentData(data, current) as number;
       const currentScore = scoresheetData[inputData];

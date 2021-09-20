@@ -50,6 +50,7 @@ class Video extends Component<Props, State> {
   public componentDidMount = () => {
     Transmitter.on('videoplay', this.onVideoPlay);
     Transmitter.on('selectorselect', this.onSelectorSelect);
+    Transmitter.on('setvideocurrenttime', this.onSetVideoCurrentTime);
     if (this.props.type === 'result') {
       this.interval = setInterval(this.onTimeUpdate, 50);
     }
@@ -58,6 +59,7 @@ class Video extends Component<Props, State> {
   public componentWillUnmount = () => {
     Transmitter.removeListener('videoplay', this.onVideoPlay);
     Transmitter.removeListener('selectorselect', this.onSelectorSelect);
+    Transmitter.removeListener('setvideocurrenttime', this.onSetVideoCurrentTime);
     this.video?.removeEventListener('contextmenu', this.onVideoContextMenu);
     clearInterval(this.interval);
   };
@@ -136,6 +138,11 @@ class Video extends Component<Props, State> {
   private onTimeUpdate = () => {
     if (!this.video) return false;
     Transmitter.emit('gamevideotimeupdate', this.video.currentTime, this.video.duration);
+  };
+
+  private onSetVideoCurrentTime = (current: number) => {
+    if (!this.video) return false;
+    this.video.currentTime = current;
   };
 }
 

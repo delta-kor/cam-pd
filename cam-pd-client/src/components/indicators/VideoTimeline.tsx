@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Component } from 'react';
+import React, { Component, RefObject } from 'react';
 import styled from 'styled-components';
 import Transmitter from '../../services/transmitter';
 import { Colors } from '../../styles';
@@ -47,13 +47,16 @@ interface State {
 
 class VideoTimeline extends Component<Props, State> {
   public state: State = { current: 0, total: 0 };
+  private indicatorRef: RefObject<HTMLDivElement> = React.createRef();
 
   public componentDidMount = () => {
     Transmitter.on('gamevideotimeupdate', this.onTimeUpdate);
+    this.indicatorRef.current?.addEventListener('click', this.onIndicatorClick);
   };
 
   public componentWillUnmount = () => {
     Transmitter.removeListener('gamevideotimeupdate', this.onTimeUpdate);
+    this.indicatorRef.current?.removeEventListener('click', this.onIndicatorClick);
   };
 
   public render() {
@@ -67,7 +70,7 @@ class VideoTimeline extends Component<Props, State> {
           <TimeLabel>{currentTime}</TimeLabel>
           <TimeLabel>{totalTime}</TimeLabel>
         </TimeLabelWrapper>
-        <IndicatorWrapper controllable={!!this.props.controllable}>
+        <IndicatorWrapper controllable={!!this.props.controllable} ref={this.indicatorRef}>
           <Indicator animate={{ width: `${percentage * 100}%` }} transition={{ duration: 0 }} />
         </IndicatorWrapper>
       </Layout>
@@ -76,6 +79,23 @@ class VideoTimeline extends Component<Props, State> {
 
   private onTimeUpdate = (current: number, total: number) => {
     this.setState({ current, total });
+  };
+
+  private onIndicatorClick = (e: MouseEvent) => {
+    if (!this.props.controllable) return false;
+
+    const target = e.target as HTMLDivElement;
+
+    const bounding = target.getBoundingClientRect();
+    const left = bounding.x;
+    const width = bounding.width;
+
+    const mouseDeltaX = e.clientX - left;
+    const percentage = mouseDeltaX / width;
+
+    const current = this.state.total * percentage;
+
+    Transmitter.emit('setvideocurrenttime', current);
   };
 }
 
