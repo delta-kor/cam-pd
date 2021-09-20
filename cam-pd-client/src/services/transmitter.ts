@@ -7,6 +7,7 @@ interface TransmitterEvents {
   gamevideostart(): void;
   videoload(id: string): void;
   selectorselect(index: number, currentTime: number): void;
+  gamevideotimeupdate(current: number, total: number): void;
 }
 
 declare interface TransmitterClass {

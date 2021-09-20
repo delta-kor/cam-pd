@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import Transmitter from '../../services/transmitter';
 import { Colors } from '../../styles';
 import CameraSelector from '../actions/CameraSelector';
+import VideoTimeline from '../indicators/VideoTimeline';
 import Video from '../medias/Video';
 
 const Layout = styled.div`
@@ -83,6 +84,7 @@ class IngameScene extends Component<Props, any> {
           <SectionTitle>PROGRAM</SectionTitle>
           <VideoWrapper>
             <Video id={'game-program'} type={'ingame'} />
+            <VideoTimeline />
           </VideoWrapper>
         </ProgramWrapper>
       </Layout>

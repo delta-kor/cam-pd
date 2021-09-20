@@ -82,8 +82,17 @@ class CameraSelector extends Component<Props, State> {
   public state: State = { selectorCount: 6, active: 4 };
   private layoutRef: RefObject<HTMLDivElement> = React.createRef();
   private videoRef: RefObject<HTMLVideoElement> = React.createRef();
+  private interval: any;
 
   public componentDidMount = () => {
+    this.interval = setInterval(() => {
+      Transmitter.emit(
+        'gamevideotimeupdate',
+        this.videoRef.current!.currentTime,
+        this.videoRef.current!.duration
+      );
+    }, 50);
+
     this.updateSelectorCount();
     window.addEventListener('resize', this.updateSelectorCount);
     this.videoRef.current?.addEventListener('pause', this.onVideoPause);
@@ -93,6 +102,7 @@ class CameraSelector extends Component<Props, State> {
   public componentWillUnmount = () => {
     window.removeEventListener('resize', this.updateSelectorCount);
     Transmitter.removeListener('gamevideostart', this.startGame);
+    clearInterval(this.interval);
   };
 
   public render() {
