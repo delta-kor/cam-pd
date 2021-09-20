@@ -61,14 +61,22 @@ interface Props {
   uuid: string;
 }
 
+interface InputData {
+  [index: number]: number;
+}
+
 class IngameScene extends Component<Props, any> {
+  private inputData: InputData = {};
+
   public componentDidMount = () => {
     Transmitter.emit('videoplay', 'game-program', this.props.uuid);
     Transmitter.on('videoload', this.onProgramVideoLoad);
+    Transmitter.on('selectorselect', this.onSelectorSelect);
   };
 
   public componentWillUnmount = () => {
     Transmitter.removeListener('videoload', this.onProgramVideoLoad);
+    Transmitter.removeListener('selectorselect', this.onSelectorSelect);
   };
 
   public render() {
@@ -94,6 +102,11 @@ class IngameScene extends Component<Props, any> {
   private onProgramVideoLoad = (id: string) => {
     if (id !== 'game-program') return false;
     Transmitter.emit('gamevideostart');
+  };
+
+  private onSelectorSelect = (index: number, current: number) => {
+    const dataKey = Math.floor(current * 100);
+    this.inputData[dataKey] = index;
   };
 }
 
