@@ -3,7 +3,15 @@ import styled from 'styled-components';
 
 const Layout = styled.div``;
 
-class GameResultScene extends Component<any, any> {
+interface Props {
+  inputData: InputData;
+}
+
+class GameResultScene extends Component<Props, any> {
+  public componentDidMount() {
+    console.log(JSON.stringify(this.props.inputData));
+  }
+
   public render() {
     return (
       <Layout>
