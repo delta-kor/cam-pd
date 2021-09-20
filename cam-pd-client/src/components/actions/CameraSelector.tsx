@@ -61,20 +61,30 @@ const SelectorTag = styled.div`
   background: ${Colors.BLACK};
 `;
 
+const SelectorHighlight = styled.div`
+  width: 100%;
+  height: 100%;
+  border: 3px solid ${Colors.WHITE};
+  z-index: 1;
+`;
+
 interface Props {
   uuid: string;
 }
 
 interface State {
   selectorCount: number;
+  active: number;
 }
 
 class CameraSelector extends Component<Props, State> {
-  public state: State = { selectorCount: 6 };
+  public state: State = { selectorCount: 6, active: 4 };
   private layoutRef: RefObject<HTMLDivElement> = React.createRef();
+  private videoRef: RefObject<HTMLVideoElement> = React.createRef();
 
   public componentDidMount = () => {
     this.updateSelectorCount();
+    this.startGame();
 
     window.addEventListener('resize', this.updateSelectorCount);
   };
@@ -95,9 +105,11 @@ class CameraSelector extends Component<Props, State> {
 
     for (let i = 0; i < this.state.selectorCount; i++) {
       const isActive = i > 0 && i < 6;
+      const isHighlighted = this.state.active === i - 1;
       selectorItems.push(
-        <SelectorItem active={isActive} key={i}>
+        <SelectorItem active={isActive} onClick={() => this.onSelectorClick(i)} key={i}>
           <SelectorTag>CAM{i + 1}</SelectorTag>
+          {isHighlighted && <SelectorHighlight />}
           {!isActive && 'NO SIGNAL'}
         </SelectorItem>
       );
@@ -105,7 +117,7 @@ class CameraSelector extends Component<Props, State> {
 
     return (
       <Layout ref={this.layoutRef}>
-        <Video src={url} />
+        <Video src={url} ref={this.videoRef} />
         <SelectorWrapper>{selectorItems}</SelectorWrapper>
       </Layout>
     );
@@ -121,6 +133,20 @@ class CameraSelector extends Component<Props, State> {
     const iteration = rowCount * 2;
 
     this.setState({ selectorCount: iteration });
+  };
+
+  private onSelectorClick = (elementIndex: number) => {
+    if (elementIndex < 1 || elementIndex > 5) return false;
+    const index = elementIndex - 1;
+    this.setState({ active: index });
+  };
+
+  private startGame = () => {
+    this.playVideo();
+  };
+
+  private playVideo = () => {
+    this.videoRef.current?.play();
   };
 }
 
