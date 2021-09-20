@@ -71,7 +71,7 @@ class Video extends Component<Props, State> {
     const url = `${Config.base_url}/stage/video?ticket=${encodeURI(this.state.ticket)}&token=${encodeURI(this.state.token)}&uuid=${this.state.uuid}`;
 
     return (
-      <Layout onClick={this.play}>
+      <Layout onClick={this.onVideoClick}>
         <ContentWrapper>
           <Content src={url} ref={this.videoRef} />
         </ContentWrapper>
@@ -83,8 +83,17 @@ class Video extends Component<Props, State> {
     e.preventDefault();
   };
 
+  private onVideoClick = () => {
+    if (this.videoRef.current?.paused) this.play();
+    else this.pause();
+  };
+
   private play = () => {
     this.videoRef.current?.play();
+  };
+
+  private pause = () => {
+    this.videoRef.current?.pause();
   };
 }
 
