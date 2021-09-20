@@ -4,6 +4,7 @@ interface TransmitterEvents {
   registercomplete(): void;
   videoplay(id: string, uuid: string): void;
   gamestart(uuid: string): void;
+  gamevideostart(): void;
   selectorselect(index: number): void;
 }
 

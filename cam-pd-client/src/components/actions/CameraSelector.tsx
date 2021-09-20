@@ -85,13 +85,13 @@ class CameraSelector extends Component<Props, State> {
 
   public componentDidMount = () => {
     this.updateSelectorCount();
-    this.startGame();
-
     window.addEventListener('resize', this.updateSelectorCount);
+    Transmitter.on('gamevideostart', this.startGame);
   };
 
   public componentWillUnmount = () => {
     window.removeEventListener('resize', this.updateSelectorCount);
+    Transmitter.removeListener('gamevideostart', this.startGame);
   };
 
   public render() {

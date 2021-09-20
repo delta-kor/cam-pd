@@ -2,6 +2,7 @@ import { Component } from 'react';
 import styled from 'styled-components';
 import { Colors } from '../../styles';
 import CameraSelector from '../actions/CameraSelector';
+import Video from '../medias/Video';
 
 const Layout = styled.div`
   display: flex;
@@ -10,26 +11,29 @@ const Layout = styled.div`
 `;
 
 const CameraWrapper = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   row-gap: 56px;
-  padding: 56px 0 0 0;
+  padding: 134px 0 0 0;
   width: 50%;
   height: 100%;
 `;
 
 const ProgramWrapper = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   row-gap: 56px;
-  padding: 56px 0 0 0;
   width: 50%;
   height: 100%;
 `;
 
 const SectionTitle = styled.div`
+  position: absolute;
+  top: 56px;
   font-weight: bold;
   font-size: 18px;
   color: ${Colors.WHITE};
@@ -41,11 +45,23 @@ const CameraSelectorWrapper = styled.div`
   height: 100%;
 `;
 
+const VideoWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  max-width: 526px;
+  height: 100%;
+  row-gap: 16px;
+`;
+
 interface Props {
   uuid: string;
 }
 
 class IngameScene extends Component<Props, any> {
+  public componentDidMount = () => {};
+
   public render() {
     return (
       <Layout>
@@ -57,6 +73,9 @@ class IngameScene extends Component<Props, any> {
         </CameraWrapper>
         <ProgramWrapper>
           <SectionTitle>PROGRAM</SectionTitle>
+          <VideoWrapper>
+            <Video id={'game-program'} />
+          </VideoWrapper>
         </ProgramWrapper>
       </Layout>
     );

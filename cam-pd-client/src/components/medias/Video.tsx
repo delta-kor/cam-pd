@@ -44,21 +44,12 @@ class Video extends Component<Props, State> {
   public videoRef: RefObject<HTMLVideoElement> = React.createRef();
 
   public componentDidMount = () => {
-    Transmitter.on('videoplay', (id, uuid) => {
-      if (id !== this.props.id) return false;
-
-      const ticket = Talker.ticket!;
-      const token = Talker.token!;
-
-      this.setState({ uuid, ticket, token }, () => {
-        this.play();
-      });
-    });
-
+    Transmitter.on('videoplay', this.onVideoPlay);
     this.videoRef.current?.addEventListener('contextmenu', this.onVideoContextMenu);
   };
 
   public componentWillUnmount = () => {
+    Transmitter.removeListener('videoplay', this.onVideoPlay);
     this.videoRef.current?.removeEventListener('contextmenu', this.onVideoContextMenu);
   };
 
@@ -78,6 +69,17 @@ class Video extends Component<Props, State> {
       </Layout>
     );
   }
+
+  private onVideoPlay = (id: string, uuid: string) => {
+    if (id !== this.props.id) return false;
+
+    const ticket = Talker.ticket!;
+    const token = Talker.token!;
+
+    this.setState({ uuid, ticket, token }, () => {
+      this.play();
+    });
+  };
 
   private onVideoContextMenu = (e: MouseEvent) => {
     e.preventDefault();
