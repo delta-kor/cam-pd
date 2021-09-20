@@ -95,6 +95,7 @@ class CameraSelector extends Component<Props, State> {
 
     this.updateSelectorCount();
     window.addEventListener('resize', this.updateSelectorCount);
+    this.videoRef.current?.addEventListener('ended', this.onVideoEnd);
     this.videoRef.current?.addEventListener('pause', this.onVideoPause);
     Transmitter.on('gamevideostart', this.startGame);
   };
@@ -102,6 +103,8 @@ class CameraSelector extends Component<Props, State> {
   public componentWillUnmount = () => {
     window.removeEventListener('resize', this.updateSelectorCount);
     Transmitter.removeListener('gamevideostart', this.startGame);
+    this.videoRef.current?.removeEventListener('ended', this.onVideoEnd);
+    this.videoRef.current?.removeEventListener('pause', this.onVideoPause);
     clearInterval(this.interval);
   };
 
@@ -165,8 +168,13 @@ class CameraSelector extends Component<Props, State> {
     this.onSelectorClick(this.state.active + 1);
   };
 
+  private onVideoEnd = () => {
+    Transmitter.emit('gamevideoend');
+  };
+
   private playVideo = () => {
     this.videoRef.current?.play();
+    this.videoRef.current!.currentTime = 110;
   };
 }
 
