@@ -7,6 +7,7 @@ export interface Stage extends Document {
   concert: string;
   videoId: string;
   scoresheet: string;
+  length: number;
 }
 
 const StageSchema = new Schema({
@@ -20,6 +21,7 @@ const StageSchema = new Schema({
   concert: { type: String, required: true },
   videoId: { type: String, required: true },
   scoresheet: { type: String, required: true, default: '0.11111' },
+  length: { type: Number, required: true },
 });
 
 const StageModel = model<Stage>('Stage', StageSchema);

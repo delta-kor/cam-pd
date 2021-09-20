@@ -1,6 +1,7 @@
 import NotfoundException from '../exceptions/notfound.exception';
-import EnvModel from '../models/env.model';
+import EnvModel, { Env } from '../models/env.model';
 import StageModel, { Stage } from '../models/stage.model';
+import getCurrentData from '../utils/timing.util';
 import VimeoUtil from '../utils/vimeo.util';
 
 class StageServiceClass {
@@ -8,22 +9,27 @@ class StageServiceClass {
     return StageModel.find();
   }
 
-  public async create(title: string, concert: string, videoId: string): Promise<Stage> {
-    const stage = new StageModel({ title, concert, videoId });
+  public async create(
+    title: string,
+    concert: string,
+    videoId: string,
+    length: number
+  ): Promise<Stage> {
+    const stage: Stage = new StageModel({ title, concert, videoId, length });
     await stage.save();
 
     return stage;
   }
 
   public async getVideo(uuid: string): Promise<string> {
-    const stage = await StageModel.findOne({ uuid });
+    const stage: Stage | null = await StageModel.findOne({ uuid });
     if (!stage) throw new NotfoundException();
 
     return VimeoUtil.getVideoUrl(stage.videoId);
   }
 
   public async updateVimeoToken(token: string): Promise<string> {
-    const jwt = await EnvModel.findOne({ key: 'vimeo_jwt' });
+    const jwt: Env | null = await EnvModel.findOne({ key: 'vimeo_jwt' });
     if (!jwt) throw new Error('Vimeo jwt not found');
 
     jwt.value = token;
@@ -33,7 +39,7 @@ class StageServiceClass {
   }
 
   public async checkData(uuid: string, data: InputData): Promise<number> {
-    const stage = await StageModel.findOne({ uuid });
+    const stage: Stage | null = await StageModel.findOne({ uuid });
     if (!stage) throw new NotfoundException();
 
     const scoresheet: ScoreSheet = {};
@@ -47,9 +53,19 @@ class StageServiceClass {
         .map(item => parseInt(item));
     }
 
-    const keys = Object.keys(scoresheet).map(item => parseInt(item));
+    const stageLength = stage.length;
 
-    return 1;
+    let score: number = 0;
+
+    for (let i = 0; i < stageLength / 5; i++) {
+      const current = i * 5;
+      const scoresheetData = getCurrentData(scoresheet, current) as number[];
+      const inputData = getCurrentData(data, current) as number;
+      const currentScore = scoresheetData[inputData];
+      score += currentScore;
+    }
+
+    return score;
   }
 }
 

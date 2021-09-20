@@ -1,4 +1,4 @@
-import { Equals, IsString } from 'class-validator';
+import { Equals, IsNumber, IsString } from 'class-validator';
 import dotenv from 'dotenv';
 import IsNotBlank from '../decorators/notblank.decorator';
 
@@ -20,6 +20,10 @@ class CreateStageDto {
   @IsString()
   @IsNotBlank()
   public video_id!: string;
+
+  @IsNumber()
+  @IsNotBlank()
+  public length!: number;
 }
 
 export default CreateStageDto;

@@ -44,7 +44,8 @@ class StageControllerClass {
     const stage = await this.stageService.create(
       req.body.title,
       req.body.concert,
-      req.body.video_id
+      req.body.video_id,
+      req.body.length
     );
     res.json({
       ok: true,
