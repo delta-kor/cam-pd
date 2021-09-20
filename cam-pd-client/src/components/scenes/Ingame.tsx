@@ -1,5 +1,6 @@
 import { Component } from 'react';
 import styled from 'styled-components';
+import Transmitter from '../../services/transmitter';
 import { Colors } from '../../styles';
 import CameraSelector from '../actions/CameraSelector';
 import Video from '../medias/Video';
@@ -60,7 +61,10 @@ interface Props {
 }
 
 class IngameScene extends Component<Props, any> {
-  public componentDidMount = () => {};
+  public componentDidMount = () => {
+    Transmitter.emit('gamevideostart');
+    Transmitter.emit('videoplay', 'game-program', this.props.uuid);
+  };
 
   public render() {
     return (
@@ -74,7 +78,7 @@ class IngameScene extends Component<Props, any> {
         <ProgramWrapper>
           <SectionTitle>PROGRAM</SectionTitle>
           <VideoWrapper>
-            <Video id={'game-program'} />
+            <Video id={'game-program'} type={'ingame'} />
           </VideoWrapper>
         </ProgramWrapper>
       </Layout>

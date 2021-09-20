@@ -28,8 +28,11 @@ const Content = styled.video`
   width: 200%;
 `;
 
+type VideoType = 'preview' | 'ingame';
+
 interface Props {
   id: string;
+  type: VideoType;
 }
 
 interface State {

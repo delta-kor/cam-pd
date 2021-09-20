@@ -64,7 +64,7 @@ class SelectorScene extends Component<any, State> {
         </StageSelectorWrapper>
         <SideMenuWrapper>
           <StageInfoWrapper>
-            <Video id={'stage-select'} />
+            <Video id={'stage-select'} type={'preview'} />
           </StageInfoWrapper>
           <PrimaryButton content={'시작하기'} onClick={this.onStart} />
         </SideMenuWrapper>
