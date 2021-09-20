@@ -31,6 +31,26 @@ class StageServiceClass {
 
     return jwt.value;
   }
+
+  public async checkData(uuid: string, data: InputData): Promise<number> {
+    const stage = await StageModel.findOne({ uuid });
+    if (!stage) throw new NotfoundException();
+
+    const scoresheet: ScoreSheet = {};
+
+    const rawScoresheetItems = stage.scoresheet.split('-');
+    for (const item of rawScoresheetItems) {
+      const time = parseInt(item.split('.')[0]);
+      scoresheet[time] = item
+        .split('.')[1]
+        .split('')
+        .map(item => parseInt(item));
+    }
+
+    const keys = Object.keys(scoresheet).map(item => parseInt(item));
+
+    return 1;
+  }
 }
 
 const StageService = new StageServiceClass();

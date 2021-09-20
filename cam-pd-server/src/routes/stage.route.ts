@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import StageController from '../controllers/stage.controller';
+import CheckDataDto from '../dtos/check-data.dto';
 import CreateStageDto from '../dtos/create-stage.dto';
 import GetVideoDto from '../dtos/get-video.dto';
 import UpdateVimeoTokenDto from '../dtos/update-vimeo-token.dto';
@@ -25,6 +26,12 @@ StageRouter.patch(
   '/video',
   ValidateGuard(UpdateVimeoTokenDto),
   AsyncUtil(StageController.updateVimeoToken.bind(StageController))
+);
+StageRouter.post(
+  '/check',
+  AuthGuard,
+  ValidateGuard(CheckDataDto),
+  AsyncUtil(StageController.checkData.bind(StageController))
 );
 
 export default StageRouter;

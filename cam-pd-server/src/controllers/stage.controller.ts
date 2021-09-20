@@ -1,3 +1,4 @@
+import CheckDataDto from '../dtos/check-data.dto';
 import CreateStageDto from '../dtos/create-stage.dto';
 import GetVideoDto from '../dtos/get-video.dto';
 import UpdateVimeoTokenDto from '../dtos/update-vimeo-token.dto';
@@ -67,6 +68,13 @@ class StageControllerClass {
     const token = req.body.token;
     const updatedToken = await this.stageService.updateVimeoToken(token);
     res.json({ ok: true, updated_token: updatedToken });
+  }
+
+  public async checkData(req: TypedRequest<CheckDataDto>, res: TypedResponse<any>): Promise<void> {
+    const uuid = req.body.uuid;
+    const data = req.body.data;
+    const score = await this.stageService.checkData(uuid, data);
+    res.json({ ok: true, score });
   }
 }
 
