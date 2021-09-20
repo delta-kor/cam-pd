@@ -3,7 +3,7 @@ import CreateStageDto from '../dtos/create-stage.dto';
 import GetVideoDto from '../dtos/get-video.dto';
 import UpdateVimeoTokenDto from '../dtos/update-vimeo-token.dto';
 import StageService from '../services/stage.service';
-import ScoreData = StageResponse.ScoreData;
+import ScoreData = StageResponse.CheckData;
 
 interface StageItem {
   uuid: string;
@@ -24,7 +24,7 @@ namespace StageResponse {
     updated_token: string;
   }
 
-  export interface ScoreData extends ApiResponse {
+  export interface CheckData extends ApiResponse {
     score: number;
     personal_best: number;
     world_best: number;
