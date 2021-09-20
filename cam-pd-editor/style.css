@@ -1,0 +1,16 @@
+body {
+    padding: 0;
+    margin: 0;
+}
+
+#content {
+    display: flex;
+}
+
+#video {
+    width: 100%;
+}
+
+#handler {
+    width: 100%;
+}
