@@ -54,7 +54,7 @@ class App {
         console.error(err.name, err.message, err.stack);
         res.json({
           ok: false,
-          message: '서버 내부 오류입니다.\n나중에 다시 시도해주세요.',
+          message: '서버 내부 오류입니다\n나중에 다시 시도해주세요',
         });
         return true;
       }
