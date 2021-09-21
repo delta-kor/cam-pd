@@ -16,6 +16,7 @@ const Info = styled.div`
   display: flex;
   flex-direction: column;
   row-gap: 36px;
+  justify-content: center;
 `;
 
 const ScoreWrapper = styled.div`
