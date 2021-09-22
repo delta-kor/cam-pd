@@ -4,6 +4,7 @@ import Talker from '../../services/talker';
 import Transmitter from '../../services/transmitter';
 import { Colors } from '../../styles';
 import getCurrentData from '../../timing.util';
+import Utils from '../../utils';
 import VideoTimeline from '../indicators/VideoTimeline';
 import Video from '../medias/Video';
 
@@ -75,10 +76,12 @@ interface Props {
 
 interface State {
   score: number | null;
+  personalBest: number | null;
+  worldBest: number | null;
 }
 
 class GameResultScene extends Component<Props, State> {
-  public state: State = { score: null };
+  public state: State = { score: null, personalBest: null, worldBest: null };
   private lastIndex: number = -1;
 
   public componentDidMount = () => {
@@ -92,7 +95,9 @@ class GameResultScene extends Component<Props, State> {
   };
 
   public render() {
-    const score = this.state.score ? this.state.score.toLocaleString('ko') : '채점 중...';
+    const score = Utils.addComma(this.state.score, '채점 중...');
+    const personalBest = Utils.addComma(this.state.personalBest, '채점 중...');
+    const worldBest = Utils.addComma(this.state.worldBest, '채점 중...');
 
     return (
       <Layout>
@@ -108,11 +113,11 @@ class GameResultScene extends Component<Props, State> {
           <DetailsWrapper>
             <DetailsItem>
               <DetailsTitle>개인최고기록</DetailsTitle>
-              <DetailsContent>123,456</DetailsContent>
+              <DetailsContent>{personalBest}</DetailsContent>
             </DetailsItem>
             <DetailsItem>
               <DetailsTitle>세계최고기록</DetailsTitle>
-              <DetailsContent>567,890</DetailsContent>
+              <DetailsContent>{worldBest}</DetailsContent>
             </DetailsItem>
           </DetailsWrapper>
         </Info>
@@ -125,7 +130,11 @@ class GameResultScene extends Component<Props, State> {
     const response = await Talker.post<ApiResponse.Stage.CheckData>('/stage/check', payload);
     if (!response.ok) return alert(response.message);
 
-    this.setState({ score: response.score });
+    this.setState({
+      score: response.score,
+      personalBest: response.personal_best,
+      worldBest: response.world_best,
+    });
   };
 
   private onTimeUpdate = (current: number) => {
