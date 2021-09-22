@@ -4,6 +4,7 @@ import Utils from '../utils';
 export interface Record extends Document {
   uuid: string;
   userUuid: string;
+  stageUuid: string;
   score: number;
   data: any;
 }
