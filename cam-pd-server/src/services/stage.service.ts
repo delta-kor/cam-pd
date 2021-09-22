@@ -80,7 +80,7 @@ class StageServiceClass {
       score += currentScore;
     }
 
-    const record = new RecordModel({ userUuid: user.uuid, score, data });
+    const record = new RecordModel({ userUuid: user.uuid, stageUuid: uuid, score, data });
     await record.save();
 
     const records = await StageServiceClass.getUserRecord(uuid, user);
@@ -90,10 +90,12 @@ class StageServiceClass {
 
   private static async getUserRecord(uuid: string, user: User): Promise<UserRecordResult> {
     const userUuid = user.uuid;
-    const bestPersonalRecord: Record[] = await RecordModel.find({ uuid, userUuid })
+    const bestPersonalRecord: Record[] = await RecordModel.find({ stageUuid: uuid, userUuid })
       .sort({ score: -1 })
       .limit(1);
-    const bestWorldRecord: Record[] = await RecordModel.find({ uuid }).sort({ score: -1 }).limit(1);
+    const bestWorldRecord: Record[] = await RecordModel.find({ stageUuid: uuid })
+      .sort({ score: -1 })
+      .limit(1);
 
     const personalBest = bestPersonalRecord[0].score;
     const worldBest = bestWorldRecord[0].score;

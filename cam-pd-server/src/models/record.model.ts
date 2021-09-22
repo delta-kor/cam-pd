@@ -11,6 +11,7 @@ export interface Record extends Document {
 const RecordSchema = new Schema<Record>({
   uuid: { type: String, required: true, unique: true, default: () => Utils.generateUuid(12) },
   userUuid: { type: String, required: true },
+  stageUuid: { type: String, required: true },
   score: { type: Number, required: true },
   data: { type: SchemaTypes.Mixed, required: true },
 });
