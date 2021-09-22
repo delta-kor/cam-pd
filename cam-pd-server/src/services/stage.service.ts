@@ -1,8 +1,21 @@
 import NotfoundException from '../exceptions/notfound.exception';
 import EnvModel, { Env } from '../models/env.model';
+import RecordModel, { Record } from '../models/record.model';
 import StageModel, { Stage } from '../models/stage.model';
+import { User } from '../models/user.model';
 import getCurrentData from '../utils/timing.util';
 import VimeoUtil from '../utils/vimeo.util';
+
+interface CheckResult {
+  score: number;
+  personalBest: number;
+  worldBest: number;
+}
+
+interface UserRecordResult {
+  personalBest: number;
+  worldBest: number;
+}
 
 class StageServiceClass {
   public async get(): Promise<Stage[]> {
@@ -38,7 +51,7 @@ class StageServiceClass {
     return jwt.value;
   }
 
-  public async checkData(uuid: string, data: InputData): Promise<number> {
+  public async checkData(uuid: string, data: InputData, user: User): Promise<CheckResult> {
     const stage: Stage | null = await StageModel.findOne({ uuid });
     if (!stage) throw new NotfoundException();
 
@@ -59,15 +72,32 @@ class StageServiceClass {
 
     let score: number = 0;
 
-    for (let i = 0; i < stageLength / 10; i++) {
-      const current = i * 10;
+    for (let i = 0; i < stageLength / 5; i++) {
+      const current = i * 5;
       const scoresheetData = getCurrentData(scoresheet, current) as number[];
       const inputData = getCurrentData(data, current) as number;
       const currentScore = scoresheetData[inputData];
       score += currentScore;
     }
 
-    return score;
+    const record = new RecordModel({ userUuid: user.uuid, score, data });
+    await record.save();
+
+    const records = await StageServiceClass.getUserRecord(uuid, user);
+
+    return { score, personalBest: records.personalBest, worldBest: records.worldBest };
+  }
+
+  private static async getUserRecord(uuid: string, user: User): Promise<UserRecordResult> {
+    const userUuid = user.uuid;
+    const bestPersonalRecord: Record[] = await RecordModel.find({ uuid, userUuid })
+      .sort({ score: -1 })
+      .limit(1);
+    const bestWorldRecord: Record[] = await RecordModel.find({ uuid }).sort({ score: -1 }).limit(1);
+
+    const personalBest = bestPersonalRecord[0].score;
+    const worldBest = bestWorldRecord[0].score;
+    return { personalBest, worldBest };
   }
 }
 

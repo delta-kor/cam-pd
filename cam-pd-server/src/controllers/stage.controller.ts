@@ -84,8 +84,12 @@ class StageControllerClass {
   ): Promise<void> {
     const uuid = req.body.uuid;
     const data = req.body.data;
-    const score = await this.stageService.checkData(uuid, data);
-    res.json({ ok: true, score, personal_best: 0, world_best: 0 });
+    const user = req.user!;
+
+    const checkResult = await this.stageService.checkData(uuid, data, user);
+    const { score, personalBest, worldBest } = checkResult;
+
+    res.json({ ok: true, score, personal_best: personalBest, world_best: worldBest });
   }
 }
 
